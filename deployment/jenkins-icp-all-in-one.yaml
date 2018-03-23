@@ -1,0 +1,59 @@
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: jenkins-icp-pvc
+  labels:
+    app: jenkins-icp
+spec:
+  accessModes:
+    - ReadWriteOnce
+  resources:
+    requests:
+      storage: 5Gi
+---
+apiVersion: extensions/v1beta1
+kind: Deployment
+metadata:
+  name: jenkins-icp
+spec:
+  replicas: 1
+  template:
+    metadata:
+      labels:
+        app: jenkins
+    spec:
+      securityContext:
+        fsGroup: 757
+      containers:
+        - name: jenkins-icp
+          image: ibmicpcoc/jenkins-icp
+          imagePullPolicy: Always
+          volumeMounts:
+            - name: jenkins-home
+              mountPath: /var/jenkins_home
+          ports:
+            - containerPort: 8080
+            - containerPort: 50000
+      volumes:
+        - name: jenkins-home
+          persistentVolumeClaim:
+            claimName: jenkins-pvc  
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: jenkins-icp-svc
+  labels:
+    app: jenkins-icp
+spec:
+  type: LoadBalancer
+  ports:
+  - port: 80
+    targetPort: 8080
+    protocol: TCP
+    name: http
+  - port: 50000
+    protocol: TCP
+    name: worker
+  selector:
+    app: jenkins-icp
