@@ -29,13 +29,13 @@ spec:
           image: ibmicpcoc/jenkins-icp
           imagePullPolicy: Always
           volumeMounts:
-            - name: jenkins-home
+            - name: jenkins-icp-pvc
               mountPath: /shared/jendir
           ports:
             - containerPort: 8080
             - containerPort: 50000
       volumes:
-        - name: jenkins-home
+        - name: jenkins-icp-pvc
           persistentVolumeClaim:
             claimName: jenkins-icp-pvc  
 ---
