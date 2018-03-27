@@ -30,14 +30,14 @@ spec:
           imagePullPolicy: Always
           volumeMounts:
             - name: jenkins-home
-              mountPath: /var/jenkins_home
+              mountPath: /shared/jendir
           ports:
             - containerPort: 8080
             - containerPort: 50000
       volumes:
         - name: jenkins-home
           persistentVolumeClaim:
-            claimName: jenkins-pvc  
+            claimName: jenkins-home  
 ---
 apiVersion: v1
 kind: Service
