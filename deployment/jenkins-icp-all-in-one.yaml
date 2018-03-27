@@ -37,7 +37,7 @@ spec:
       volumes:
         - name: jenkins-home
           persistentVolumeClaim:
-            claimName: jenkins-home  
+            claimName: jenkins-icp-pvc  
 ---
 apiVersion: v1
 kind: Service
